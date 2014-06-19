@@ -7,6 +7,7 @@ class PostsController < ApplicationController
   end
 
   def show
+    @comment = Comment.new
   end
 
   def new
@@ -19,7 +20,7 @@ class PostsController < ApplicationController
 
     if @post.save
       flash[:notice] = "Your post has been saved"
-      redirect_to post_path
+      redirect_to post_path(@post)
     else
       render :new
     end
@@ -43,7 +44,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:title, :url, :description)
+    params.require(:post).permit(:title, :url, :description, category_ids: [])
   end
 
   def set_post

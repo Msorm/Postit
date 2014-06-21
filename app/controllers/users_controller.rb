@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+	before_action :set_post, only: [:update, :show, :edit]
+	before_action :require_same_user, only: [:update, :edit]
 	def new
 		@user = User.new
 	end
@@ -16,10 +18,33 @@ class UsersController < ApplicationController
 		end
 	end
 
+	def edit
+		
+	end
+
+	def update
+		
+	end
+
+	def show
+		
+	end
 
 	private
 
 	def user_params
 		params.require(:user).permit(:username, :password)
+	end
+
+	def set_post
+		@user = User.find(params[:id])
+	end
+
+	def require_same_user
+		if current_user != @user
+			flash[:error] = "You don't have access"
+			redirect_to root_path
+		end
+
 	end
 end

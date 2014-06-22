@@ -1,10 +1,10 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:edit, :update, :show] 
+  before_action :set_post, only: [:edit, :update, :show, :vote] 
   before_action :require_user, except: [:show, :index]
 
 
   def index
-  	@posts = Post.all
+  	@posts = Post.all.sort_by{ |x| x.total_votes }.reverse
   end
 
   def show
@@ -40,6 +40,17 @@ class PostsController < ApplicationController
      end 
   end
 
+  def vote
+    vote = Vote.create(voteable: @post, user: current_user, vote: params[:vote])
+
+    if vote.valid?
+      flash[:notice] = "You vote was counted"
+    else
+      flash[:error] = "You have already voted"
+    end
+    redirect_to :back
+
+  end
 
 
   private
